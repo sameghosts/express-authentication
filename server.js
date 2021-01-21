@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const layouts = require('express-ejs-layouts');
 const session = require('express-session');
+const flash = require('connect-flash');
 const passport = require('./config/ppConfig');
 const isLoggedIn = require('./middleware/isLoggedIn')
 
@@ -24,8 +25,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+//initialize flash connect, MUST GO AFTER THE SESSION MIDDLEWARE
+app.use(flash());
+
 // Write custom middleware to access the user on every response
 app.use((req, res, next) => {
+  let alerts = req.flash();
+  console.log(alerts);
+  res.locals.alerts = alerts;
   res.locals.currentUser = req.user;
   next();
 });
@@ -35,7 +42,7 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-app.get('/profile', (req, res) => {
+app.get('/profile', isLoggedIn, (req, res) => {
   res.render('profile');
 });
 
