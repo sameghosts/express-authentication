@@ -3,6 +3,8 @@ const express = require('express');
 const layouts = require('express-ejs-layouts');
 const session = require('express-session');
 const passport = require('./config/ppConfig');
+const isLoggedIn = require('./middleware/isLoggedIn')
+
 const app = express();
 
 app.set('view engine', 'ejs');
