@@ -4,7 +4,8 @@ const layouts = require('express-ejs-layouts');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('./config/ppConfig');
-const isLoggedIn = require('./middleware/isLoggedIn')
+const isLoggedIn = require('./middleware/isLoggedIn');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(require('morgan')('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
 app.use(layouts);
+app.use(helmet());
 
 app.use(session({
   secret: process.env.SESSION_SECRET, //should be an ev variable

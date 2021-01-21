@@ -3,6 +3,7 @@ module.exports = (req, res, next) => {
     next();
   } else {
     console.log(`😡 You can't be here!`);
+    res.flash('error', 'You must be logged in to access that page');
     res.redirect('/auth/login');
   }
 }
