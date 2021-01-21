@@ -22,7 +22,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Write custom middleware to access the user on every response
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+});
+
 app.get('/', (req, res) => {
+  // console.log(req.user);
   res.render('index');
 });
 
@@ -32,6 +39,6 @@ app.get('/profile', (req, res) => {
 
 app.use('/auth', require('./routes/auth'));
 
-var server = app.listen(process.env.PORT || 3001, ()=> console.log(`🎧You're listening to the smooth sounds of port ${process.env.PORT || 3001}🎧`));
+var server = app.listen(process.env.PORT || 3000, ()=> console.log(`🎧You're listening to the smooth sounds of port ${process.env.PORT || 3000}🎧`));
 
 module.exports = server;
