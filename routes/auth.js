@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const passport= require('../config/ppConfig');
 const db = require('../models');
 
 router.get('/signup', (req, res) => {
   res.render('auth/signup');
 });
 
+//sign up POST route
 router.post('/signup', (req, res) =>{
   //findOrCreate a new user based on email
   db.user.findOrCreate({
@@ -21,7 +23,10 @@ router.post('/signup', (req, res) =>{
     if (created) {
       //redirect to homepage or profile
       console.log(`😎 ${user.name} was created`)
-      res.redirect('/');
+      //IIFE authenticate and redirect to the homepage or profile
+      passport.authenticate('local', {
+        successRedirect: '/'
+      })(req, res);
     } else {
       // if user wasn't created -- the is a user at that emaill so they can't sign up
       console.log(`🐸 ${user.name} already exists`)
@@ -32,13 +37,18 @@ router.post('/signup', (req, res) =>{
     console.log(`🙃 OOPS there was an error`);
     console.log(err);
     res.redirect('auth/signup');
-  })
     //if there is an error, its probably a validation error, so we'll return to /auth/signup
-  res.send(req.body);
-})
+  })
+});
 
 router.get('/login', (req, res) => {
   res.render('auth/login');
 });
+
+//make passport do the login stuff
+router.post('/login', passport.authenticate('local', {
+  failureRedirect: '/auth/login',
+  successRedirect: '/'
+}));
 
 module.exports = router;

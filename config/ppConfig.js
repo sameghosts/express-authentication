@@ -6,10 +6,10 @@ const db = require('../models');
 // Passwort will serialize objects; converts the user to an identifier (id)
 passport.serializeUser((user, cb) => {
   cb(null, user.id);
-})
+});
 
 //passport deserializing an object; finds user in db via serialized identifier (id)
-passport.deserializedUser((id, cb) => {
+passport.deserializeUser((id, cb) => {
   db.user.findByPk(id).then(user => {
     cb(null, user);
   }).catch(err => {
